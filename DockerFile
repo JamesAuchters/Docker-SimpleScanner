@@ -13,6 +13,9 @@ RUN apk add python
 #Install Pip
 RUN apk add py-pip
 
+#Install nikto
+RUN apk add nikto
+
 #Upgrade Pip to the latest
 RUN pip install --upgrade pip
 
