@@ -1,23 +1,23 @@
 #Use Alpine Linux as the docker base. 
-FROM alpine:3.7
+FROM amd64/ubuntu
 
-#update Alpine image
-RUN apk update
+#update 
+RUN apt-get update
 
 #Install nmap
-RUN apk add nmap
+RUN apt-get -y install nmap
 
 #Install Python
-RUN apk add python
+RUN apt-get -y install python
 
 #Install Pip
-RUN apk add py-pip
+RUN apt-get -y install python3-pip
 
 #Install nikto
-RUN apk add nikto
+RUN apt-get -y install nikto
 
 #Upgrade Pip to the latest
-RUN pip install --upgrade pip
+RUN pip3 install --upgrade pip
 
 # Set the working directory to /app
 WORKDIR /app
@@ -25,7 +25,8 @@ WORKDIR /app
 # Copy the current directory contents into the container at /app
 COPY . /app
 
-RUN nmap -v scanme.nmap.org
+#Useful to prove that nmap works
+#RUN nmap -v scanme.nmap.org
 
 # Install any needed packages specified in requirements.txt
 RUN pip install --trusted-host pypi.python.org -r requirements.txt
