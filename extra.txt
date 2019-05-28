@@ -1,0 +1,25 @@
+FROM amd64/ubuntu
+
+#install required packages
+RUN apt-get update
+RUN apt-get install -y nmap
+RUN apt-get install -y nikto
+RUN apt-get install -y python
+RUN apt-get install -y python3-venv
+RUN apt-get install -y python3-pip
+
+#create project directory
+WORKDIR ScannerApp
+
+#create virtual environment
+RUN python3 -m venv venv
+RUN . /venv/bin/activate
+
+#install flask
+RUN pip install flask
+
+#create app directory
+WORKDIR App
+
+COPY . /app
+

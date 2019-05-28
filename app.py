@@ -10,7 +10,7 @@ app = Flask(__name__)
 def home():
     return "<h1>Docker Vuln Scanner</h1> \
     <p>This site runs a basic nmap scanner within a docker container - Flask presents an extremely dumb API for running ANY command & nmap commands</p> \
-    <p>Use /Scan/?ip=demo or /Command/?command=ls to make things work!"
+    <p>Use /Scan/?ip=demo or /Command/?command=ls to make things work! </p>"
 
 @app.route("/scan/",methods = ['GET'])
 def runscan():
