@@ -1,32 +1,31 @@
 #Use Alpine Linux as the docker base. 
-FROM amd64/ubuntu
+FROM alpine:3.7
 
-#update 
-RUN apt-get update
+#update Alpine image
+RUN apk update
 
 #Install nmap
-RUN apt-get -y install nmap
+RUN apk add nmap
+
+RUN apk add nmap-scripts
 
 #Install Python
-RUN apt-get -y install python
+RUN apk add python
 
 #Install Pip
-RUN apt-get -y install python3-pip
+RUN apk add py-pip
 
 #Upgrade Pip to the latest
-RUN pip3 install --upgrade pip
+RUN pip install --upgrade pip
 
-RUN apt-get install -y python3-venv
 # Set the working directory to /app
 WORKDIR /app
 
 # Copy the current directory contents into the container at /app
 COPY . /app
 
-#Useful to prove that nmap works
 #RUN nmap -v scanme.nmap.org
 
-RUN python3 -m venv venv
 # Install any needed packages specified in requirements.txt
 RUN pip install --trusted-host pypi.python.org -r requirements.txt
 

@@ -9,16 +9,16 @@ app = flask.Flask(__name__)
 @app.route('/', methods=['GET'])
 def home():
     return "<h1>Docker Vuln Scanner</h1> \
-    <p>This site runs a basic nmap scanner within a docker container - Flask presents an extremely dumb API for running ANY command & nmap commands</p> \
-    <p>Use /Scan/?ip=demo or /Command/?command=ls to make things work! </p>"
+    <p>This site runs a basic nmap scanner within a docker container</p>"
 
 @app.route('/api/v1/Scan', methods=['GET'])
 def execute():
     print("============")
     if 'ip' in request.args:
-        command = 'nmap -sV --script vulners'
+        command = 'nmap -sV '
         ip = request.args['ip']
         command = command + ip
+        command = command + ' --script vulners.nse -oX out.xml'
         print(command)
     if request.method == 'GET':
         print('Started executing command')
@@ -32,6 +32,20 @@ def execute():
 @app.route('/api/v1/files', methods=['GET'])
 def files_api():
     command = "ls -a"
+    print(command)
+    if request.method == 'GET':
+        print('Started executing command')
+        command = shlex.split(command)
+        print('split command')
+        process = subprocess.Popen(command, stdout = subprocess.PIPE)
+        print("Run successfully")
+        output, err = process.communicate()
+        return output
+    return "not executed"
+
+@app.route('/api/v1/lastScan', methods=['GET'])
+def lastscan_api():
+    command = "cat out.xml"
     print(command)
     if request.method == 'GET':
         print('Started executing command')
