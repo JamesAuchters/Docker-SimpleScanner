@@ -13,9 +13,6 @@ RUN apt-get -y install python
 #Install Pip
 RUN apt-get -y install python3-pip
 
-#Install nikto
-RUN apt-get -y install nikto
-
 #Upgrade Pip to the latest
 RUN pip3 install --upgrade pip
 

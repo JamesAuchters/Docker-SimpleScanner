@@ -1,10 +1,10 @@
-from flask import Flask
-from flask import request
-import os
+import flask 
+import subprocess
 import subprocess
 import shlex
+from flask import request
 
-app = Flask(__name__)
+app = flask.Flask(__name__)
 
 @app.route('/', methods=['GET'])
 def home():
@@ -12,26 +12,35 @@ def home():
     <p>This site runs a basic nmap scanner within a docker container - Flask presents an extremely dumb API for running ANY command & nmap commands</p> \
     <p>Use /Scan/?ip=demo or /Command/?command=ls to make things work! </p>"
 
-@app.route("/scan/",methods = ['GET'])
-def runscan():
-    command = "nmap -v "
+@app.route('/api/v1/Scan', methods=['GET'])
+def execute():
     print("============")
-    if 'option' in request.args:
-        option = request.args['option']
-        command = command + '-' + option + ' '
     if 'ip' in request.args:
+        command = 'nmap -sV --script vulners'
         ip = request.args['ip']
         command = command + ip
-        arguments = shlex.split(command)
-        execution = subprocess.check_output(arguments)
-        return execution
-    
-@app.route("/command/",methods = ['GET'])
-def runcmds():
-    if 'command' in request.args:
-        command = request.args['command']
-        arguments = shlex.split(command)
-        execution = subprocess.check_output(arguments)
-        return execution
+        print(command)
+    if request.method == 'GET':
+        print('Started executing command')
+        command = shlex.split(command)
+        process = subprocess.Popen(command, stdout = subprocess.PIPE)
+        print("Run successfully")
+        output, err = process.communicate()
+        return output
+    return "not executed"
+
+@app.route('/api/v1/files', methods=['GET'])
+def files_api():
+    command = "ls -a"
+    print(command)
+    if request.method == 'GET':
+        print('Started executing command')
+        command = shlex.split(command)
+        print('split command')
+        process = subprocess.Popen(command, stdout = subprocess.PIPE)
+        print("Run successfully")
+        output, err = process.communicate()
+        return output
+    return "not executed"
 
 app.run(host='0.0.0.0', port=80)
