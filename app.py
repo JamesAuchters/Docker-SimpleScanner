@@ -3,8 +3,9 @@ import subprocess
 import subprocess
 import shlex
 from flask import request
+from flask import render_template
 
-app = flask.Flask(__name__)
+app = flask.Flask(__name__, static_url_path='/static')
 
 @app.route('/', methods=['GET'])
 def home():
@@ -18,7 +19,7 @@ def execute():
         command = 'nmap -sV '
         ip = request.args['ip']
         command = command + ip
-        command = command + ' --script vulners.nse -oX out.xml'
+        command = command + ' --script vulners.nse -oX ./templates/out.xml'
         print(command)
     if request.method == 'GET':
         print('Started executing command')
@@ -43,18 +44,11 @@ def files_api():
         return output
     return "not executed"
 
-@app.route('/api/v1/lastScan', methods=['GET'])
-def lastscan_api():
-    command = "cat out.xml"
-    print(command)
-    if request.method == 'GET':
-        print('Started executing command')
-        command = shlex.split(command)
-        print('split command')
-        process = subprocess.Popen(command, stdout = subprocess.PIPE)
-        print("Run successfully")
-        output, err = process.communicate()
-        return output
-    return "not executed"
+@app.route("/api/v1/lastScan")
+def hello():  
+    with open("./templates/out.xml", "r") as f:
+        content = f.read()
+        message = "Hello, World"
+        return render_template('content.html', message=content)
 
 app.run(host='0.0.0.0', port=80)
